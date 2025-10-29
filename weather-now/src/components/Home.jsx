@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { WiThermometer, WiStrongWind, WiDaySunny, WiCloudy } from "react-icons/wi";
+import { WiThermometer, WiStrongWind, WiCloudy } from "react-icons/wi";
+import {
+    WiDaySunny,
+    WiDayCloudy,
+    WiCloud,
+    WiFog,
+    WiRain,
+    WiDayRain,
+    WiThunderstorm,
+    WiSnow,
+    WiSleet,
+    WiShowers,
+    WiStrongWind,
+} from "react-icons/wi";
 import { FiRefreshCw } from "react-icons/fi";
 import { FaSpinner } from "react-icons/fa";
 
@@ -86,12 +99,45 @@ const Home = () => {
         localStorage.removeItem("weather");
     };
 
+    // const getWeatherIcon = (code) => {
+    //     if (code === 0) return <WiDaySunny className="text-yellow-400 text-7xl" />;
+    //     if (code >= 1 && code <= 3)
+    //         return <WiCloudy className="text-gray-400 text-7xl" />;
+    //     return <WiDaySunny className="text-blue-400 text-7xl" />;
+    // };
+
+
     const getWeatherIcon = (code) => {
-        if (code === 0) return <WiDaySunny className="text-yellow-400 text-7xl" />;
+        if (code === 0)
+            return <WiDaySunny className="text-yellow-400 text-7xl" />; // Clear sky
+
         if (code >= 1 && code <= 3)
-            return <WiCloudy className="text-gray-400 text-7xl" />;
-        return <WiDaySunny className="text-blue-400 text-7xl" />;
+            return <WiDayCloudy className="text-gray-300 text-7xl" />; // Partly cloudy
+
+        if (code >= 45 && code <= 48)
+            return <WiFog className="text-gray-400 text-7xl" />; // Fog / Depositing rime fog
+
+        if (code >= 51 && code <= 57)
+            return <WiShowers className="text-blue-400 text-7xl" />; // Drizzle / Freezing drizzle
+
+        if (code >= 61 && code <= 67)
+            return <WiRain className="text-blue-500 text-7xl" />; // Rain / Freezing rain
+
+        if (code >= 71 && code <= 77)
+            return <WiSnow className="text-cyan-200 text-7xl" />; // Snow fall / grains
+
+        if (code >= 80 && code <= 82)
+            return <WiDayRain className="text-blue-400 text-7xl" />; // Rain showers
+
+        if (code >= 85 && code <= 86)
+            return <WiSleet className="text-sky-300 text-7xl" />; // Snow showers
+
+        if (code >= 95 && code <= 99)
+            return <WiThunderstorm className="text-yellow-500 text-7xl" />; // Thunderstorms
+
+        return <WiStrongWind className="text-gray-500 text-7xl" />; // Default fallback
     };
+
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-200 to-blue-500 flex flex-col items-center justify-center px-4 py-8">
