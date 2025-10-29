@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Home = () => {
     const [city, setCity] = useState("");
@@ -7,6 +7,17 @@ const Home = () => {
     // const [country,setCountry] = useState("");
     const [error, setError] = useState("");
 
+
+    // for persistent data
+    useEffect(() => {
+        const savedCity = localStorage.getItem("city");
+        const savedWeather = localStorage.getItem("weather");
+
+        if (savedCity && savedWeather) {
+            setCity(savedCity);
+            setWeather(JSON.parse(savedWeather));
+        }
+    }, []);
     const fetchWeather = async () => {
         try {
             // add because after fetching a result user try to fetch another at that time 
@@ -26,7 +37,6 @@ const Home = () => {
             }
             // setIsExist(true);
 
-
             // 2. if given city exist then get the coordinates
             const { latitude, longitude, name, country } = geoData.results[0];
             // setCity(name);
@@ -38,13 +48,16 @@ const Home = () => {
             );
             const weatherData = await weatherResponse.json();
 
-            setWeather({
+            const newWeather = {
                 city: `${name},${country}`,
                 temperature: weatherData.current_weather.temperature,
                 windspeed: weatherData.current_weather.windspeed,
                 weathercode: weatherData.current_weather.weathercode,
                 time: weatherData.current_weather.time,
-            });
+            };
+            setWeather(newWeather);
+            localStorage.setItem("city", city);
+            localStorage.setItem("weather", JSON.stringify(newWeather));
         } catch (error) {
             setError("Failed to fetch weather data.");
         }
@@ -54,6 +67,8 @@ const Home = () => {
         setCity("");
         setWeather(null);
         setError("");
+        localStorage.removeItem("city");
+        localStorage.removeItem("weather");
     };
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-200 to-blue-500 flex flex-col items-center justify-center p-4">
